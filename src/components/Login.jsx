@@ -33,7 +33,7 @@ function Login() {
                .then((res) => res.json())
                 .then((data) => {
                     if (data.access === 'Login Exitoso') {
-                        localStorage.setItem("inPostUser", event.target.userName.value);
+                        localStorage.setItem("inUser", event.target.userName.value);
                         navigate('/accounts');
                     } else {
                         setShow(true);

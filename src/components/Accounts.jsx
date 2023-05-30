@@ -3,7 +3,6 @@ import {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import Table from 'react-bootstrap/Table';
 import { fetchHeaders } from '../constants';
-import {cards} from '../test';
 
 function Accounts() {
     // Account list
@@ -11,19 +10,22 @@ function Accounts() {
     const navigate = useNavigate();
 
     const getAccountList = (data) => {
-        setAccountList(data);
+        //setAccountList(data);
     }
 
-    const handleAccountSelection = (cardCode) => {
-        navigate(`/account-statements/${cardCode}`);
+    const handleAccountSelection = (cardCode, accountType ) => {
+        if (accountType === 'Cuenta Maestra') {   
+            navigate(`/account-statements/${cardCode}`);
+        } else  {
+            navigate(`/subaccount-statements/${cardCode}`)
+        }
     }
-       // load full article list
+       // load full account or subaccount statements 
     useEffect(() => {
         fetch('http://localhost:8080/physicalCard', {
             method: "POST",
             body: JSON.stringify({
-                "inName": localStorage.getItem("inPostUser"),
-                "inPostUser": localStorage.getItem("inPostUser"),
+                "inName": localStorage.getItem("inUser"),
                 "inPostIp": localStorage.getItem("ip") 
             }),
             headers: fetchHeaders 
@@ -45,6 +47,7 @@ function Accounts() {
                 <Table className='mb-5' bordered  hover>
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Numero de Tarjeta</th>
                             <th>Estado</th>
                             <th>Tipo de Cuenta</th>
@@ -55,7 +58,10 @@ function Accounts() {
                         {
                             accountList.map(function (accountList, index) {
                                 return (
-                                    <tr key={index} onClick={() => handleAccountSelection(accountList.CardCode)}>
+                                    <tr key={index} onClick={() =>
+                                                    handleAccountSelection(accountList.CardCode,
+                                                    accountList.AccountType)}>
+                                        <td>{accountList.Id}</td>
                                         <td>{accountList.CardCode}</td>
                                         <td>{accountList.AccountStatus}</td>
                                         <td>{accountList.AccountType}</td>
