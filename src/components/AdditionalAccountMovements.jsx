@@ -1,19 +1,40 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
-
-import { movements } from '../test';
+import { fetchHeaders } from '../constants';
 
 function Movements() {
-    const [movementList, setMovementList] = useState(movements);
-
+    const [movementList, setMovementList] = useState([]);
+   const { idStatement, cardCode } = useParams(); 
+    useEffect(() => {
+        fetch('http://localhost:8080/additionalMovements', {
+            method: "POST",
+            body: JSON.stringify({
+                "inIdSubAccountState": idStatement,
+                "inCardCode": cardCode,
+                "inUsername": localStorage.getItem("inUser"),
+                "inPostIp": localStorage.getItem("ip") 
+            }),
+            headers: fetchHeaders 
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setMovementList(data);
+                console.log(data)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
     return (
         <div>
-            <h1>movements</h1>
+            <h1>Movements</h1>
 
              <Table className='mb-5' bordered  hover>
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Fecha</th>
                             <th>Tipo de Movimiento</th>
                             <th>Descripcion</th>
@@ -27,8 +48,9 @@ function Movements() {
                             movementList.map(function (movementList, index) {
                                 return (
                                     <tr key={index} >
-                                        <td>{movementList.Date}</td>
-                                        <td>{movementList.MovementType}</td>
+                                        <td>{movementList.Id}</td>
+                                        <td>{movementList.BillingPeriod}</td>
+                                        <td>{movementList.MovementTypeName}</td>
                                         <td>{movementList.Description}</td>
                                         <td>{movementList.Reference}</td>
                                         <td>{movementList.Amount}</td>

@@ -4,17 +4,17 @@ import Table from 'react-bootstrap/Table';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchHeaders } from '../constants';
 
-function AccountStatements() {
+function SubAccountStatement() {
     const navigate = useNavigate();
     const [accountStatmentList, setAccountStatementList] = useState([]);
-    const { idStatement, cardCode } = useParams();
+    const {cardCode} = useParams();
 
     const handleStatementSelection = (idStatement) => {
-        navigate(`/master-account-movements/${idStatement}/${cardCode}`);
+        navigate(`/additional-account-movements/${idStatement}/${cardCode}`);
     }
 
     useEffect(() => {
-        fetch('http://localhost:8080/masterAccountStatement', {
+        fetch('http://localhost:8080/SubAccountStatement', {
             method: "POST",
             body: JSON.stringify({
                 "inCardCode": cardCode,
@@ -35,18 +35,18 @@ function AccountStatements() {
 
     return (
         <div>
-            <h1> Account Statements</h1>
+            <h1>Subaccount Statements</h1>
              <Table className='mb-5' bordered  hover>
                     <thead>
                         <tr>
                             <th>Id</th>
                             <th>Fecha</th>
-                            <th>Pago minímo</th>
-                            <th>Pago de Contado</th>
-                            <th>Intereses Corrientes</th>
-                            <th>Intereses Moratorios</th>
                             <th>Cantidad de Operaciones ATM</th>
                             <th>Cantidad de Operaciones en Ventanilla</th>
+                            <th>Cantidad de Compras</th>
+                            <th>Suma de las Compras</th>
+                            <th>Cantidad de Retiros</th>
+                            <th>Suma de Los Retiros</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,12 +56,12 @@ function AccountStatements() {
                                     <tr key={index} onClick={() => handleStatementSelection(accountStatementList.Id)}>
                                         <td>{accountStatementList.Id}</td>
                                         <td>{accountStatementList.BillingPeriod}</td>
-                                        <td>{accountStatementList.MinPayment}</td>
-                                        <td>{accountStatementList.StatementBalance}</td>
-                                        <td>{accountStatementList.CurrentInterest}</td>
-                                        <td>{accountStatementList.PenaltyInterest}</td>
                                         <td>{accountStatementList.QATMOperations}</td>
                                         <td>{accountStatementList.QBrandOperations}</td>
+                                        <td>{accountStatementList.QPurchases}</td>
+                                        <td>{accountStatementList.TotalPurchases}</td>
+                                        <td>{accountStatementList.QWithdrawals}</td>
+                                        <td>{accountStatementList.TotalWithdrawals}</td>
                                     </tr>
                                 )
                             })
@@ -71,4 +71,4 @@ function AccountStatements() {
         </div>
     )
 }
-export default AccountStatements;
+export default SubAccountStatement;
