@@ -1,20 +1,44 @@
 import React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import Table from 'react-bootstrap/Table';
-
+import { fetchHeaders } from '../constants';
 import {cards} from '../test';
 
 function Accounts() {
     // Account list
-    const[accountList, setAccountList] = useState(cards);
+    const[accountList, setAccountList] = useState([]);
     const navigate = useNavigate();
+
+    const getAccountList = (data) => {
+        setAccountList(data);
+    }
 
     const handleAccountSelection = (cardCode) => {
         navigate(`/account-statements/${cardCode}`);
     }
+       // load full article list
+    useEffect(() => {
+        fetch('http://localhost:8080/physicalCard', {
+            method: "POST",
+            body: JSON.stringify({
+                "inName": localStorage.getItem("inPostUser"),
+                "inPostUser": localStorage.getItem("inPostUser"),
+                "inPostIp": localStorage.getItem("ip") 
+            }),
+            headers: fetchHeaders 
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setAccountList(data);
+                console.log(data)
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
 
-    return (
+    return (   
         <div>
             <h1>Juanito mora del castillo</h1>
             <div className='border rounded bg-light mx-5 px-2 mt-2'>

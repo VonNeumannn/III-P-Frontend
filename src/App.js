@@ -3,8 +3,9 @@ import Accounts from './components/Accounts';
 import AccountStatements from './components/AccountStatements';
 import Login from './components/Login';
 import Movements from './components/Movements';
-
+import { getMyIP } from './constants';
 function App() {
+  getMyIP();
   document.body.style = 'background: #d3d3d3;';
   return (
     <div className="App container px-5">

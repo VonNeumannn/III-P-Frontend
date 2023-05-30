@@ -17,7 +17,7 @@ function Login() {
             event.stopPropagation();
             setValidated(true);
         } else {
-           /* fetch('http://localhost:8080/login', {
+            fetch('http://localhost:8080/login', {
                 method: "POST",
                 body: JSON.stringify({
                     "inUser": event.target.userName.value,
@@ -41,9 +41,8 @@ function Login() {
                 })
                 .catch((err) => {
                     console.log(err.message);
-                });*/
+                });
                
-            navigate('/accounts');
             setValidated(false);
         } 
     }
